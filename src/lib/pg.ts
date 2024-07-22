@@ -3,6 +3,8 @@ import { getLogger } from '../util/logger.util';
 
 const logger = getLogger(`pg-pool`);
 
+// FOrce
+
 const RDS_ROOT_CERTIFICATE = process.env.RDS_ROOT_CERTIFICATE || '';
 
 let pgPool: Pool;
