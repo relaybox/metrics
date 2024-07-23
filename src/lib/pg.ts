@@ -13,7 +13,10 @@ export function getPgPool(): Pool {
     return pgPool;
   }
 
-  logger.info('Creating pg pool', { host: process.env.DB_HOST, name: process.env.DB_NAME });
+  logger.info('Creating pg pool', {
+    host: process.env.DB_HOST,
+    name: process.env.DB_NAME
+  });
 
   pgPool = new Pool({
     host: process.env.DB_HOST,
@@ -36,7 +39,7 @@ export function getPgPool(): Pool {
 process.on('SIGINT', async () => {
   if (pgPool) {
     await pgPool.end();
-    logger.info('PG pool ended through app termination, exiting...');
+    logger.info('PG pool ended through app termination');
   }
 
   process.exit(0);
