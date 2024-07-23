@@ -57,7 +57,7 @@ export function createClient({ host, port }: RedisOptions): RedisClient {
 process.on('SIGINT', async () => {
   if (redisClient) {
     await redisClient.quit();
-    logger.info('Redis client disconnected through app termination');
+    logger.info('Redis client disconnected through app termination.');
   }
 
   process.exit(0);
