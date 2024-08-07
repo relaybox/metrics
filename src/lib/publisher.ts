@@ -32,7 +32,7 @@ export function dispatch(
 ): void {
   const envelope: Envelope = {
     exchange: AMQP_EXCHANGE_NAME,
-    routingKey: getRoutingKey(subscription)
+    routingKey: getRoutingKey(nspRoomId)
   };
 
   const requestId = uuid();
@@ -50,17 +50,17 @@ export function dispatch(
 
 export function getRoutingKey(nspRoomId: string): string {
   const [appPid, roomId] = nspRoomId.split(/:(.+)/);
-  const hashedNamespace = gethashedNamespace(roomId);
+  const hashedRoomId = getHashedRoomId(roomId);
 
-  return `${AMQP_ROUTING_KEY_PREFIX}:${appPid}:${hashedNamespace}`;
+  return `${AMQP_ROUTING_KEY_PREFIX}:${appPid}:${hashedRoomId}`;
 }
 
-export function gethashedNamespace(namespace: string): number {
+export function getHashedRoomId(roomId: string): number {
   let hash = 0;
   let chr: number;
 
-  for (let i = 0; i < namespace.length; i++) {
-    chr = namespace.charCodeAt(i);
+  for (let i = 0; i < roomId.length; i++) {
+    chr = roomId.charCodeAt(i);
     hash = (hash << 5) - hash + chr;
     hash |= 0;
   }
