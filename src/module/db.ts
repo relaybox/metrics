@@ -64,7 +64,6 @@ export function saveRoomJoin(
 ): Promise<QueryResult> {
   const now = new Date().toISOString();
   const { appPid, uid, clientId, connectionId, socketId } = session;
-  const roomId = 'chat:one:test';
 
   const query = `
     INSERT INTO room_sessions (
@@ -79,7 +78,7 @@ export function saveRoomJoin(
   return pgClient.query(query, [
     appId,
     appPid,
-    roomId,
+    nspRoomId,
     nspRoomId,
     uid,
     clientId,
