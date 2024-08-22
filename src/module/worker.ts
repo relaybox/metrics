@@ -56,7 +56,7 @@ export async function startWorker() {
   });
 
   worker.on('active', () => {
-    logger.info(`Metrics worker active`);
+    logger.debug(`Metrics worker active`);
   });
 }
 

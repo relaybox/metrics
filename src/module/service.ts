@@ -45,7 +45,7 @@ export async function setMetric(
   key: string,
   uid: string
 ): Promise<void> {
-  logger.info(`Setting metric ${key}`, { uid });
+  logger.debug(`Setting metric ${key}`, { uid });
 
   try {
     await metricsRepository.setMetric(redisClient, key, uid);
@@ -61,7 +61,7 @@ export async function unsetMetric(
   key: string,
   uid: string
 ): Promise<void> {
-  logger.info(`Setting metric ${key}`, { uid });
+  logger.debug(`Setting metric ${key}`, { uid });
 
   try {
     await metricsRepository.unsetMetric(redisClient, key, uid);
@@ -79,7 +79,7 @@ export async function saveRoomJoin(
   timestamp: string,
   session: ReducedSession
 ): Promise<void> {
-  logger.info(`Persisting room join data ${nspRoomId}`, { session });
+  logger.debug(`Persisting room join data ${nspRoomId}`, { session });
 
   try {
     await metricsDb.saveRoomJoin(pgClient, appId, nspRoomId, timestamp, session);
@@ -95,7 +95,7 @@ export async function updateRoomSessionTimestamp(
   roomSessionId: string,
   timestamp: string
 ): Promise<void> {
-  logger.info(`Updating room session timestamp ${roomSessionId}`, { roomSessionId });
+  logger.debug(`Updating room session timestamp ${roomSessionId}`, { roomSessionId });
 
   try {
     await metricsDb.updateRoomSessionTimestamp(pgClient, roomSessionId, timestamp);
@@ -113,7 +113,7 @@ export async function getRoomSessionId(
 ): Promise<string> {
   const { connectionId, socketId } = session;
 
-  logger.info(`Getting room session id`, { nspRoomId, connectionId });
+  logger.debug(`Getting room session id`, { nspRoomId, connectionId });
 
   try {
     const { rows: roomSessions } = await metricsDb.getRoomSessionId(
@@ -183,7 +183,7 @@ export async function saveDeliveryMetrics(
   const { nspRoomId, event, recipientCount, timestamp, session, requestId, latencyLog, listener } =
     data;
 
-  logger.info(`Pushing dispatch data for ${event}`, { nspRoomId, event, recipientCount });
+  logger.debug(`Pushing dispatch data for ${event}`, { nspRoomId, event, recipientCount });
 
   try {
     await metricsDb.saveDeliveryMetrics(
