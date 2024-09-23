@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:verbose": "nodemon",
     "dev": "TZ=UTC LOGGING_ENABLED=false nodemon",
-    "build": "etsc --minify && cp -r ./src/certs ./build",
-    "start": "node ./build/app.js",
+    "build": "node build.config.js",
     "test": "vitest"
   },
   "keywords": [],
