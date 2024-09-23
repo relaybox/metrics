@@ -43,7 +43,7 @@ const mockDb = vi.hoisted(() => ({
 vi.mock('@/module/db', () => mockDb);
 
 describe('service', () => {
-  const mockredisClient = {} as RedisClient;
+  const mockRedisClient = {} as RedisClient;
   const mockPgClient = {} as PoolClient;
 
   afterEach(() => {
@@ -66,9 +66,9 @@ describe('service', () => {
       const uid = '123';
       const key = 'test-key';
 
-      await setMetric(logger, mockredisClient, key, uid);
+      await setMetric(logger, mockRedisClient, key, uid);
 
-      expect(mockRepository.setMetric).toHaveBeenCalledWith(mockredisClient, key, uid);
+      expect(mockRepository.setMetric).toHaveBeenCalledWith(mockRedisClient, key, uid);
     });
   });
 
@@ -77,9 +77,9 @@ describe('service', () => {
       const uid = '123';
       const key = 'test-key';
 
-      await unsetMetric(logger, mockredisClient, key, uid);
+      await unsetMetric(logger, mockRedisClient, key, uid);
 
-      expect(mockRepository.unsetMetric).toHaveBeenCalledWith(mockredisClient, key, uid);
+      expect(mockRepository.unsetMetric).toHaveBeenCalledWith(mockRedisClient, key, uid);
     });
   });
 
@@ -140,7 +140,7 @@ describe('service', () => {
       const nspRoomId = 'test:123';
       const subscription = formatMetricsSubscription(nspRoomId, MetricType.ALL);
 
-      await broadcastMetrics(logger, mockredisClient, session, nspRoomId);
+      await broadcastMetrics(logger, mockRedisClient, session, nspRoomId);
 
       expect(mockPublisher.dispatch).toHaveBeenCalledWith(
         nspRoomId,
