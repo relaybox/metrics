@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
-import { RedisClient } from '../lib/redis';
-import { getLogger } from '../util/logger.util';
-import { getApplicationId, saveDeliveryMetrics } from '../module/service';
+import { RedisClient } from '@/lib/redis';
+import { getLogger } from '@/util/logger.util';
+import { getApplicationId, saveDeliveryMetrics } from '@/module/service';
 
 const logger = getLogger('metrics-delivery-data');
 

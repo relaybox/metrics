@@ -1,10 +1,10 @@
-import { RedisClient } from '../lib/redis';
+import { RedisClient } from '@/lib/redis';
 import { Pool } from 'pg';
-import { handler as metricsPushHandler } from '../handlers/metrics-push';
-import { handler as metricsShiftHandler } from '../handlers/metrics-shift';
-import { handler as metricsClientRoomJoinHandler } from '../handlers/metrics-client-room-join';
-import { handler as metricsClientRoomLeaveHandler } from '../handlers/metrics-client-room-leave';
-import { handler as metricsDeliveryDataHandler } from '../handlers/metrics-delivery-data';
+import { handler as metricsPushHandler } from '@/handlers/metrics-push';
+import { handler as metricsShiftHandler } from '@/handlers/metrics-shift';
+import { handler as metricsClientRoomJoinHandler } from '@/handlers/metrics-client-room-join';
+import { handler as metricsClientRoomLeaveHandler } from '@/handlers/metrics-client-room-leave';
+import { handler as metricsDeliveryDataHandler } from '@/handlers/metrics-delivery-data';
 
 export enum JobName {
   METRICS_PUSH = 'metrics:push',

@@ -1,6 +1,6 @@
 import { Connection, Envelope, PublisherProps } from 'rabbitmq-client';
-import { ReducedSession } from 'src/module/types';
-import { getLogger } from '../util/logger.util';
+import { ReducedSession } from '@/module/types';
+import { getLogger } from '@/util/logger.util';
 import { v4 as uuid } from 'uuid';
 
 const logger = getLogger('publisher');

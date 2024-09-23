@@ -1,4 +1,4 @@
-import { RedisClient } from '../lib/redis';
+import { RedisClient } from '@/lib/redis';
 
 export async function getMetric(redisClient: RedisClient, key: string): Promise<number> {
   return redisClient.lLen(key);

@@ -1,9 +1,9 @@
 import { Logger } from 'winston';
-import { dispatch } from '../lib/publisher';
+import { dispatch } from '@/lib/publisher';
 import { KeyPrefix, ReducedSession } from './types';
-import * as metricsRepository from './repository';
-import * as metricsDb from './db';
-import { RedisClient } from '../lib/redis';
+import * as metricsRepository from '@/module/repository';
+import * as metricsDb from '@/module/db';
+import { RedisClient } from '@/lib/redis';
 import { PoolClient } from 'pg';
 
 const PLATFORM_RESERVED_NAMESPACE = '$';
