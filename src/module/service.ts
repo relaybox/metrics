@@ -1,6 +1,6 @@
 import { Logger } from 'winston';
 import { dispatch } from '@/lib/publisher';
-import { KeyPrefix, ReducedSession } from './types';
+import { KeyPrefix, MetricCount, MetricType, ReducedSession } from './types';
 import * as metricsRepository from '@/module/repository';
 import * as metricsDb from '@/module/db';
 import { RedisClient } from '@/lib/redis';
@@ -8,20 +8,6 @@ import { PoolClient } from 'pg';
 
 const PLATFORM_RESERVED_NAMESPACE = '$';
 const METRICS_SUBSCRIPTION_NAMESPACE = 'metrics';
-
-interface MetricCount {
-  [key: string]: number;
-}
-
-export enum MetricType {
-  ALL = 'all',
-  CONNECTION = 'connection',
-  SUBSCRIBER = 'subscriber',
-  PUBLISHER = 'publisher',
-  PRESENCE_CONNECTION = 'presenceConnection',
-  PRESENCE_SUBSCRIBER = 'presenceSubscriber',
-  PRESENCE_MEMBER = 'presenceMember'
-}
 
 export function getMetricsKeyName(nspRoomId: string, metricType: MetricType): string {
   return `${KeyPrefix.METRICS}:${nspRoomId}:${metricType}`;
