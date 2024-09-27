@@ -1,4 +1,4 @@
-import { getMockReducedSession } from '@/test/__mocks__/internal/session.mock';
+import { getMockReducedSession } from '../__mocks__/internal/session.mock';
 import { describe, vi, it, afterEach, expect } from 'vitest';
 import { getLogger } from '@/util/logger.util';
 import { MetricType } from '@/module/types';
