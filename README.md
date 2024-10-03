@@ -4,57 +4,14 @@ The metrics service is one of four core services that keep the core database up 
 
 ## Getting Started
 
-Create a copy of .env.tempate in the root of the project and rename it to .env. Add the following configuration options...
+### Prerequisites
 
-```
-# Local DB host
-DB_HOST=
+- Node.js 20.x
+- Docker (optional)
 
-# Local DB name
-DB_NAME=
+### Configuration
 
-# Local DB port
-DB_PORT=
-
-# Local DB proxy enabled - Set to false for local development
-DB_PROXY_ENABLED=
-
-# Local DB user
-DB_USER=
-
-# Local DB password
-DB_PASSWORD=
-
-# Local DB max connections
-DB_MAX_CONNECTIONS=
-
-# Local DB idle timeout
-DB_IDLE_TIMEOUT_MS=
-
-# Local DB TLS disabled - Set to true for local development unless connecttion over TLS
-DB_TLS_DISABLED=
-
-# Local Redis host
-REDIS_HOST=
-
-# Local Redis port
-REDIS_PORT=
-
-# Local DB TLS disabled - Set to true for local development unless connecttion over TLS
-REDIS_TLS_DISABLED=
-
-# Local RabbitMQ connection string
-RABBIT_MQ_CONNECTION_STRING=
-
-# Recommended setting 5 - This value needs to be synced across services
-RABBIT_MQ_QUEUE_COUNT=
-
-# Localhost - Set to true for local development
-LOCALHOST=
-
-# Desired log level - recommended setting "debug" for local development
-LOG_LEVEL=
-```
+Create a copy of `.env.template` in the root of the project and rename it to `.env`. Adjust the configuration settings to match your local environment. Further information about each environment variable can be found in `.env.template`.
 
 ## Installation
 
@@ -72,7 +29,7 @@ npm run dev
 
 ## Testing
 
-Unit tests are built using `vitest`.
+The service unit tests can be found in the `./test` directory. Tests are run using the `vitest` runner.
 
 ```
 npm run test
@@ -80,15 +37,13 @@ npm run test
 
 ## About "Metrics"
 
-Metrics play an important role in providing visibility into the traffic and performance of the RelayBox ecosystem from a global right down to individual application and even user level.
+Metrics play an important role in providing visibility into the traffic and performance of the RelayBox ecosystem from a global level right down to the individual application and even user level. Metrics provide feebback on user interaction with rooms and events, along with statistics related to the delivery of messages and system latency.
 
-Metrics provide feebback on user interaction with rooms and events, along with statistics related to the delivery of messages and time taken to process.
-
-The dashboard provides useful insights into the e=perfomance and usage statistics and you are even able to write your own metrics visualizations based on the data we collect.
+The dashboard provides useful insights into the perfomance and usage statistics and you are even able to write your own metrics visualizations based on the data we collect.
 
 ## About this service
 
-The "Metrics" service initiates worker processes that handle FIFO jobs added to BullMQ by the [UWS](https://github.com/relaybox/uws) service. It is responsible for aggregating and persisting data related to how users interact with the system and broadcast to data to relevant subscribers.
+The "Metrics" service initiates worker processes that handle FIFO jobs added to BullMQ by the [uWS](https://github.com/relaybox/uws) service. It is responsible for aggregating and persisting data related to how users interact with the system and broadcast data to relevant subscribers.
 
 The service router is structured to map jobs to handlers based on the job name...
 
@@ -129,22 +84,22 @@ export function router(
 
 The following jobs are handled by the service:
 
-## metrics:push
+### metrics:push
 
-This job is responsible for incrementing a cached metric based on a user event. Once updated, the full metrics set is broadcast to relevant subscribers.
+This job is responsible for incrementing cached metrics based on a user events. Once updated, the full metrics set is broadcast to relevant subscribers.
 
-## metrics:shift
+### metrics:shift
 
-This job is responsible for decrementing a cached metric based on a user event. Once updated, the full metrics set is broadcast to relevant subscribers.
+This job is responsible for decrementing cached metrics based on a user events. Once updated, the full metrics set is broadcast to relevant subscribers.
 
-## metrics:delivery:data
+### metrics:delivery:data
 
 This job is responsible for persisting event delivery data to the database. Each persisted record contains information about the event, the number of subscribers receiving the event, the sender, the room, the listener, and includes the latency log to determine how long the event took from creation to delivery and persistence.
 
-## metrics:client:room:join
+### metrics:client:room:join
 
 This job is responsible for persisting room "join" events and includes details about the user, room, socket, and connection.
 
-## metrics:client:room:leave
+### metrics:client:room:leave
 
 Opposite to the `metrics:client:room:join` job, this job is responsible for persisting room "leave" events.
