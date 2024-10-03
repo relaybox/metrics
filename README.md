@@ -1,4 +1,4 @@
-# Metrics - Metrics Management Service by RelayBox
+# Metrics - RelayBox Metrics Management Service
 
 The metrics service is one of four core services that keep the core database up to date with the latest data broadcast by the UWS Realtime Service.
 
