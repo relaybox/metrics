@@ -86,22 +86,22 @@ export function router(
 
 The following jobs are handled by the service:
 
-### metrics:push
+- `metrics:push`
 
 This job is responsible for incrementing cached metrics based on a user events. Once updated, the full metrics set is broadcast to relevant subscribers.
 
-### metrics:shift
+- `metrics:shift`
 
 This job is responsible for decrementing cached metrics based on a user events. Once updated, the full metrics set is broadcast to relevant subscribers.
 
-### metrics:delivery:data
+- `metrics:delivery:data`
 
 This job is responsible for persisting event delivery data to the database. Each persisted record contains information about the event, the number of subscribers receiving the event, the sender, the room, the listener, and includes the latency log to determine how long the event took from creation to delivery and persistence.
 
-### metrics:client:room:join
+- `metrics:client:room:join`
 
 This job is responsible for persisting room "join" events and includes details about the user, room, socket, and connection.
 
-### metrics:client:room:leave
+- `metrics:client:room:leave`
 
 Opposite to the `metrics:client:room:join` job, this job is responsible for persisting room "leave" events.
