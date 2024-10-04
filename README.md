@@ -1,6 +1,6 @@
 # Metrics - RelayBox Metrics Service
 
-The metrics service is one of four core services that keep the core database up to date with the latest data broadcast by the UWS Realtime Service.
+The metrics service is one of four core services that keep the core database up to date with the latest data broadcast by the [uWS](https://github.com/relaybox/uws) Realtime Service.
 
 ## Getting Started
 
@@ -38,6 +38,8 @@ npm run test
 ## About "Metrics"
 
 Metrics play an important role in providing visibility into the traffic and performance of the RelayBox ecosystem from a global level right down to the individual application and even user level. Metrics provide feebback on user interaction with rooms and events, along with statistics related to the delivery of messages and system latency.
+
+![RelayBox system diagram, highlight Metrics](/assets/system/relaybox-system-metrics.png)
 
 The dashboard provides useful insights into the perfomance and usage statistics and you are even able to write your own metrics visualizations based on the data we collect.
 
