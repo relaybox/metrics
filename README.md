@@ -39,7 +39,7 @@ npm run test
 
 Metrics play an important role in providing visibility into the traffic and performance of the RelayBox ecosystem from a global level right down to the individual application, user, room and event level. Metrics provide feebback on user interaction with rooms and events, along with statistics related to the delivery of messages and system latency.
 
-![RelayBox system diagram, highlight Metrics](/assets/system/relaybox-system-metrics.png)
+<!-- ![RelayBox system diagram, highlight Metrics](/assets/system/relaybox-system-metrics.png) -->
 
 The dashboard provides useful insights into the perfomance and usage statistics and even provides a mechanism to write your own metrics visualizations based on the data collected.
 
