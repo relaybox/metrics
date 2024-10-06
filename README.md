@@ -1,6 +1,6 @@
 # Metrics - RelayBox Metrics Service
 
-The metrics service is one of four core services that keep the core database up to date with the latest data broadcast by the [uWS](https://github.com/relaybox/uws) Realtime Service.
+The metrics service is one of four core services that keep the core database up to date with the latest data broadcast by the [Core](https://github.com/relaybox/core) Realtime Service.
 
 ## Getting Started
 
@@ -45,7 +45,7 @@ The dashboard provides useful insights into the perfomance and usage statistics 
 
 ## About this service
 
-The "Metrics" service initiates worker processes that handle FIFO jobs added to BullMQ by the [uWS](https://github.com/relaybox/uws) service. It is responsible for aggregating and persisting data related to how users interact with the system and broadcast data to relevant subscribers.
+The "Metrics" service initiates worker processes that handle FIFO jobs added to BullMQ by the [Core](https://github.com/relaybox/core) service. It is responsible for aggregating and persisting data related to how users interact with the system and broadcast data to relevant subscribers.
 
 The service router is structured to map jobs to handlers based on the job name...
 
