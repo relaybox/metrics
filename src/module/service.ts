@@ -202,93 +202,93 @@ export async function saveDeliveryMetrics(
   }
 }
 
-export async function createRoomIfNotExists(
-  logger: Logger,
-  pgClient: PoolClient,
-  appId: string,
-  roomId: string,
-  roomType: RoomType,
-  timestamp: string,
-  session: ReducedSession
-): Promise<string | null> {
-  logger.debug(`Creating room, if not exists`, { roomId, session });
+// export async function createRoomIfNotExists(
+//   logger: Logger,
+//   pgClient: PoolClient,
+//   appId: string,
+//   roomId: string,
+//   roomType: RoomType,
+//   timestamp: string,
+//   session: ReducedSession
+// ): Promise<string | null> {
+//   logger.debug(`Creating room, if not exists`, { roomId, session });
 
-  try {
-    await pgClient.query('BEGIN');
+//   try {
+//     await pgClient.query('BEGIN');
 
-    const { appPid, clientId, connectionId, socketId, uid } = session;
+//     const { appPid, clientId, connectionId, socketId, uid } = session;
 
-    const { rows: rooms } = await db.createRoomIfNotExists(
-      pgClient,
-      appId,
-      roomId,
-      roomType,
-      timestamp,
-      appPid,
-      clientId,
-      connectionId,
-      socketId,
-      uid
-    );
+//     const { rows: rooms } = await db.createRoomIfNotExists(
+//       pgClient,
+//       appId,
+//       roomId,
+//       roomType,
+//       timestamp,
+//       appPid,
+//       clientId,
+//       connectionId,
+//       socketId,
+//       uid
+//     );
 
-    if (!rooms.length) {
-      logger.debug(`Room exists, return null from create function`);
-      await pgClient.query('COMMIT');
-      return null;
-    }
+//     if (!rooms.length) {
+//       logger.debug(`Room exists, return null from create function`);
+//       await pgClient.query('COMMIT');
+//       return null;
+//     }
 
-    const roomInternalId = rooms[0]?.id;
+//     const roomInternalId = rooms[0]?.id;
 
-    await addRoomMember(
-      logger,
-      pgClient,
-      appId,
-      roomId,
-      roomInternalId,
-      RoomMemberType.OWNER,
-      timestamp,
-      session
-    );
+//     await addRoomMember(
+//       logger,
+//       pgClient,
+//       appId,
+//       roomId,
+//       roomInternalId,
+//       RoomMemberType.OWNER,
+//       timestamp,
+//       session
+//     );
 
-    await pgClient.query('COMMIT');
+//     await pgClient.query('COMMIT');
 
-    return roomInternalId;
-  } catch (err: any) {
-    await pgClient.query('ROLLBACK');
-    logger.error(`Failed to create room ${roomId}:`, err);
-    throw err;
-  }
-}
+//     return roomInternalId;
+//   } catch (err: any) {
+//     await pgClient.query('ROLLBACK');
+//     logger.error(`Failed to create room ${roomId}:`, err);
+//     throw err;
+//   }
+// }
 
-export async function addRoomMember(
-  logger: Logger,
-  pgClient: PoolClient,
-  appId: string,
-  roomId: string,
-  roomInternalId: string,
-  roomMemberType: RoomMemberType,
-  timestamp: string,
-  session: ReducedSession
-): Promise<void> {
-  logger.debug(`Adding room owner ${session.uid} to room ${roomId}`, { roomId, session });
+// export async function addRoomMember(
+//   logger: Logger,
+//   pgClient: PoolClient,
+//   appId: string,
+//   roomId: string,
+//   roomInternalId: string,
+//   roomMemberType: RoomMemberType,
+//   timestamp: string,
+//   session: ReducedSession
+// ): Promise<void> {
+//   logger.debug(`Adding room owner ${session.uid} to room ${roomId}`, { roomId, session });
 
-  try {
-    const { appPid, clientId, connectionId, uid } = session;
+//   try {
+//     const { appPid, clientId, connectionId, uid } = session;
 
-    await db.addRoomMember(
-      pgClient,
-      appId,
-      roomId,
-      roomInternalId,
-      roomMemberType,
-      timestamp,
-      appPid,
-      clientId,
-      connectionId,
-      uid
-    );
-  } catch (err: any) {
-    logger.error(`Failed to add room owner ${session.uid} to room ${roomId}:`, err);
-    throw err;
-  }
-}
+//     await db.addRoomMember(
+//       pgClient,
+//       appId,
+//       roomId,
+//       roomInternalId,
+//       roomMemberType,
+//       timestamp,
+//       appPid,
+//       clientId,
+//       connectionId,
+//       uid
+//     );
+//   } catch (err: any) {
+//     logger.error(`Failed to add room owner ${session.uid} to room ${roomId}:`, err);
+//     throw err;
+//   }
+// }

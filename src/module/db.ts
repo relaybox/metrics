@@ -116,72 +116,72 @@ export function updateRoomSessionTimestamp(
   return pgClient.query(query, [timestamp, roomSessionId]);
 }
 
-export function createRoomIfNotExists(
-  pgClient: PoolClient,
-  appId: string,
-  roomId: string,
-  roomType: RoomType,
-  timestamp: string,
-  appPid: string,
-  clientId: string,
-  connectionId: string,
-  socketId: string,
-  uid: string
-): Promise<QueryResult> {
-  const query = `
-    INSERT INTO rooms (
-      "appId", "appPid", "roomId", "roomType", uid, "clientId", 
-      "connectionId", "socketId", "createdAt", "updatedAt"
-    ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
-    ) ON CONFLICT ("appId", "roomId") DO NOTHING RETURNING id;
-  `;
+// export function createRoomIfNotExists(
+//   pgClient: PoolClient,
+//   appId: string,
+//   roomId: string,
+//   roomType: RoomType,
+//   timestamp: string,
+//   appPid: string,
+//   clientId: string,
+//   connectionId: string,
+//   socketId: string,
+//   uid: string
+// ): Promise<QueryResult> {
+//   const query = `
+//     INSERT INTO rooms (
+//       "appId", "appPid", "roomId", "roomType", uid, "clientId",
+//       "connectionId", "socketId", "createdAt", "updatedAt"
+//     ) VALUES (
+//       $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+//     ) ON CONFLICT ("appId", "roomId") DO NOTHING RETURNING id;
+//   `;
 
-  return pgClient.query(query, [
-    appId,
-    appPid,
-    roomId,
-    roomType,
-    uid,
-    clientId,
-    connectionId,
-    socketId,
-    timestamp,
-    timestamp
-  ]);
-}
+//   return pgClient.query(query, [
+//     appId,
+//     appPid,
+//     roomId,
+//     roomType,
+//     uid,
+//     clientId,
+//     connectionId,
+//     socketId,
+//     timestamp,
+//     timestamp
+//   ]);
+// }
 
-export async function addRoomMember(
-  pgClient: PoolClient,
-  appId: string,
-  roomId: string,
-  roomInternalId: string,
-  roomMemberType: RoomMemberType,
-  timestamp: string,
-  appPid: string,
-  clientId: string,
-  connectionId: string,
-  uid: string
-): Promise<QueryResult> {
-  const query = `
-    INSERT INTO room_members (
-      "appId", "appPid", "roomId", "roomInternalId", uid, "clientId", "memberType", 
-      "connectionId", "createdAt", "updatedAt"
-    ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
-    );
-  `;
+// export async function addRoomMember(
+//   pgClient: PoolClient,
+//   appId: string,
+//   roomId: string,
+//   roomInternalId: string,
+//   roomMemberType: RoomMemberType,
+//   timestamp: string,
+//   appPid: string,
+//   clientId: string,
+//   connectionId: string,
+//   uid: string
+// ): Promise<QueryResult> {
+//   const query = `
+//     INSERT INTO room_members (
+//       "appId", "appPid", "roomId", "roomInternalId", uid, "clientId", "memberType",
+//       "connectionId", "createdAt", "updatedAt"
+//     ) VALUES (
+//       $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+//     );
+//   `;
 
-  return pgClient.query(query, [
-    appId,
-    appPid,
-    roomId,
-    roomInternalId,
-    uid,
-    clientId,
-    roomMemberType,
-    connectionId,
-    timestamp,
-    timestamp
-  ]);
-}
+//   return pgClient.query(query, [
+//     appId,
+//     appPid,
+//     roomId,
+//     roomInternalId,
+//     uid,
+//     clientId,
+//     roomMemberType,
+//     connectionId,
+//     timestamp,
+//     timestamp
+//   ]);
+// }
