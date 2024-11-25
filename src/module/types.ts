@@ -34,3 +34,12 @@ export enum MetricType {
   PRESENCE_SUBSCRIBER = 'presenceSubscriber',
   PRESENCE_MEMBER = 'presenceMember'
 }
+
+export enum RoomType {
+  PUBLIC = 'public',
+  PRIVATE = 'private'
+}
+
+export enum RoomMemberType {
+  OWNER = 'owner'
+}

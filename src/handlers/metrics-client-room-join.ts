@@ -5,14 +5,17 @@ import {
   broadcastMetrics,
   getApplicationId,
   getMetricsKeyName,
-  saveRoomJoin,
-  setMetric
+  addRoomSession,
+  setMetric,
+  createRoomIfNotExists,
+  addRoomMember
 } from '@/module/service';
+import { RoomMemberType } from '@/module/types';
 
 const logger = getLogger('metrics-client-room-join');
 
 export async function handler(pgPool: Pool, redisClient: RedisClient, data: any): Promise<void> {
-  const { uid, nspRoomId, metrics, timestamp, session } = data;
+  const { uid, roomId, nspRoomId, roomType, metrics, timestamp, session } = data;
 
   const pgClient = await pgPool.connect();
 
@@ -26,7 +29,9 @@ export async function handler(pgPool: Pool, redisClient: RedisClient, data: any)
       })
     );
 
-    await saveRoomJoin(logger, pgClient, appId, nspRoomId, timestamp, session);
+    await createRoomIfNotExists(logger, pgClient, appId, roomId, roomType, timestamp, session);
+    await addRoomMember(logger, pgClient, appId, roomId, RoomMemberType.OWNER, timestamp, session);
+    await addRoomSession(logger, pgClient, appId, nspRoomId, timestamp, session);
     await broadcastMetrics(logger, redisClient, session, nspRoomId);
   } catch (err) {
     logger.error(`Failed to push room join metrics`, { data, err });

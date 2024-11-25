@@ -1,8 +1,15 @@
 import { Logger } from 'winston';
 import { dispatch } from '@/lib/publisher';
-import { KeyPrefix, MetricCount, MetricType, ReducedSession } from './types';
-import * as metricsRepository from '@/module/repository';
-import * as metricsDb from '@/module/db';
+import {
+  KeyPrefix,
+  MetricCount,
+  MetricType,
+  ReducedSession,
+  RoomMemberType,
+  RoomType
+} from './types';
+import * as repository from '@/module/repository';
+import * as db from '@/module/db';
 import { RedisClient } from '@/lib/redis';
 import { PoolClient } from 'pg';
 
@@ -21,7 +28,7 @@ export async function getApplicationId(
   pgClient: PoolClient,
   session: ReducedSession
 ): Promise<string> {
-  const { rows: applications } = await metricsDb.getApplicationIdByAppPid(pgClient, session.appPid);
+  const { rows: applications } = await db.getApplicationIdByAppPid(pgClient, session.appPid);
   return applications[0].id;
 }
 
@@ -34,7 +41,7 @@ export async function setMetric(
   logger.debug(`Setting metric ${key}`, { uid });
 
   try {
-    await metricsRepository.setMetric(redisClient, key, uid);
+    await repository.setMetric(redisClient, key, uid);
   } catch (err: any) {
     logger.error(`Failed to set metric`);
     throw err;
@@ -50,14 +57,14 @@ export async function unsetMetric(
   logger.debug(`Setting metric ${key}`, { uid });
 
   try {
-    await metricsRepository.unsetMetric(redisClient, key, uid);
+    await repository.unsetMetric(redisClient, key, uid);
   } catch (err: any) {
     logger.error(`Failed to set metric`);
     throw err;
   }
 }
 
-export async function saveRoomJoin(
+export async function addRoomSession(
   logger: Logger,
   pgClient: PoolClient,
   appId: string,
@@ -68,7 +75,7 @@ export async function saveRoomJoin(
   logger.debug(`Persisting room join data ${nspRoomId}`, { session });
 
   try {
-    await metricsDb.saveRoomJoin(pgClient, appId, nspRoomId, timestamp, session);
+    await db.addRoomSession(pgClient, appId, nspRoomId, timestamp, session);
   } catch (err: any) {
     logger.error(`Failed persist join room data`, { err, nspRoomId });
     throw err;
@@ -84,7 +91,7 @@ export async function updateRoomSessionTimestamp(
   logger.debug(`Updating room session timestamp ${roomSessionId}`, { roomSessionId });
 
   try {
-    await metricsDb.updateRoomSessionTimestamp(pgClient, roomSessionId, timestamp);
+    await db.updateRoomSessionTimestamp(pgClient, roomSessionId, timestamp);
   } catch (err: any) {
     logger.error(`Failed to update room session timestamp`, { err, roomSessionId });
     throw err;
@@ -102,7 +109,7 @@ export async function getRoomSessionId(
   logger.debug(`Getting room session id`, { nspRoomId, connectionId });
 
   try {
-    const { rows: roomSessions } = await metricsDb.getRoomSessionId(
+    const { rows: roomSessions } = await db.getRoomSessionId(
       pgClient,
       nspRoomId,
       connectionId,
@@ -148,7 +155,7 @@ export async function getMetrics(
       const key = `${KeyPrefix.METRICS}:${nspRoomId}:${metricType}`;
 
       try {
-        const count = await metricsRepository.getMetric(redisClient, key);
+        const count = await repository.getMetric(redisClient, key);
         counts[metricType] = count;
       } catch (err) {
         logger.error(`Failed to get metric for ${metricType}:`, { err });
@@ -172,7 +179,7 @@ export async function saveDeliveryMetrics(
   logger.debug(`Pushing dispatch data for ${event}`, { nspRoomId, event, recipientCount });
 
   try {
-    await metricsDb.saveDeliveryMetrics(
+    await db.saveDeliveryMetrics(
       pgClient,
       appId,
       nspRoomId,
@@ -191,6 +198,76 @@ export async function saveDeliveryMetrics(
       recipientCount,
       err
     });
+    throw err;
+  }
+}
+
+export async function createRoomIfNotExists(
+  logger: Logger,
+  pgClient: PoolClient,
+  appId: string,
+  roomId: string,
+  roomType: RoomType,
+  timestamp: string,
+  session: ReducedSession
+): Promise<string | null> {
+  logger.debug(`Creating room, if not exists`, { roomId, session });
+
+  try {
+    const { appPid, clientId, connectionId, socketId, uid } = session;
+
+    const { rows: rooms } = await db.createRoomIfNotExists(
+      pgClient,
+      appId,
+      roomId,
+      roomType,
+      timestamp,
+      appPid,
+      clientId,
+      connectionId,
+      socketId,
+      uid
+    );
+
+    if (!rooms.length) {
+      logger.debug(`Room exists, return null from create function`);
+      return null;
+    }
+
+    return rooms[0]?.id;
+  } catch (err: any) {
+    logger.error(`Failed to create room ${roomId}:`, err);
+    throw err;
+  }
+}
+
+export async function addRoomMember(
+  logger: Logger,
+  pgClient: PoolClient,
+  appId: string,
+  roomId: string,
+  roomMemberType: RoomMemberType,
+  timestamp: string,
+  session: ReducedSession
+): Promise<void> {
+  logger.debug(`Adding room owner ${session.uid} to room ${roomId}`, { roomId, session });
+
+  try {
+    const { appPid, clientId, connectionId, uid } = session;
+
+    await db.addRoomMember(
+      pgClient,
+      appId,
+      roomId,
+      roomMemberType,
+      timestamp,
+      appPid,
+      clientId,
+      connectionId,
+      uid
+    );
+  } catch (err: any) {
+    logger.error(`Failed to add room owner ${session.uid} to room ${roomId}:`, err);
     throw err;
   }
 }
