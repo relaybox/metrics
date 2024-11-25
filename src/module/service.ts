@@ -214,6 +214,8 @@ export async function createRoomIfNotExists(
   logger.debug(`Creating room, if not exists`, { roomId, session });
 
   try {
+    await pgClient.query('BEGIN');
+
     const { appPid, clientId, connectionId, socketId, uid } = session;
 
     const { rows: rooms } = await db.createRoomIfNotExists(
@@ -231,11 +233,28 @@ export async function createRoomIfNotExists(
 
     if (!rooms.length) {
       logger.debug(`Room exists, return null from create function`);
+      await pgClient.query('COMMIT');
       return null;
     }
 
-    return rooms[0]?.id;
+    const roomInternalId = rooms[0]?.id;
+
+    await addRoomMember(
+      logger,
+      pgClient,
+      appId,
+      roomId,
+      roomInternalId,
+      RoomMemberType.OWNER,
+      timestamp,
+      session
+    );
+
+    await pgClient.query('COMMIT');
+
+    return roomInternalId;
   } catch (err: any) {
+    await pgClient.query('ROLLBACK');
     logger.error(`Failed to create room ${roomId}:`, err);
     throw err;
   }
@@ -246,6 +265,7 @@ export async function addRoomMember(
   pgClient: PoolClient,
   appId: string,
   roomId: string,
+  roomInternalId: string,
   roomMemberType: RoomMemberType,
   timestamp: string,
   session: ReducedSession
@@ -259,6 +279,7 @@ export async function addRoomMember(
       pgClient,
       appId,
       roomId,
+      roomInternalId,
       roomMemberType,
       timestamp,
       appPid,

@@ -155,6 +155,7 @@ export async function addRoomMember(
   pgClient: PoolClient,
   appId: string,
   roomId: string,
+  roomInternalId: string,
   roomMemberType: RoomMemberType,
   timestamp: string,
   appPid: string,
@@ -162,13 +163,12 @@ export async function addRoomMember(
   connectionId: string,
   uid: string
 ): Promise<QueryResult> {
-  const now = new Date().toISOString();
-
   const query = `
     INSERT INTO room_members (
-      "appId", "appPid", "roomId", uid, "clientId", "memberType", "connectionId", "createdAt", "updatedAt"
+      "appId", "appPid", "roomId", "roomInternalId", uid, "clientId", "memberType", 
+      "connectionId", "createdAt", "updatedAt"
     ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
     );
   `;
 
@@ -176,6 +176,7 @@ export async function addRoomMember(
     appId,
     appPid,
     roomId,
+    roomInternalId,
     uid,
     clientId,
     roomMemberType,

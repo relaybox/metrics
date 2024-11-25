@@ -7,10 +7,8 @@ import {
   getMetricsKeyName,
   addRoomSession,
   setMetric,
-  createRoomIfNotExists,
-  addRoomMember
+  createRoomIfNotExists
 } from '@/module/service';
-import { RoomMemberType } from '@/module/types';
 
 const logger = getLogger('metrics-client-room-join');
 
@@ -30,7 +28,6 @@ export async function handler(pgPool: Pool, redisClient: RedisClient, data: any)
     );
 
     await createRoomIfNotExists(logger, pgClient, appId, roomId, roomType, timestamp, session);
-    await addRoomMember(logger, pgClient, appId, roomId, RoomMemberType.OWNER, timestamp, session);
     await addRoomSession(logger, pgClient, appId, nspRoomId, timestamp, session);
     await broadcastMetrics(logger, redisClient, session, nspRoomId);
   } catch (err) {
